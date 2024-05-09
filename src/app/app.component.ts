@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  NgZone,
   OnDestroy,
   OnInit,
 } from '@angular/core';
@@ -47,22 +48,33 @@ export class AppComponent implements OnInit, OnDestroy {
   priority: number = 0;
   processingTime: number = 0;
   private queue: PrintRequest[] = [];
-  private intervalSubscription!: Subscription;
+  private intervalSubscription: Subscription | null = null;
   processingTimeChanges = new BehaviorSubject<number>(0);
 
-  constructor(private messageService: MessageService) {}
+  constructor(private messageService: MessageService, private zone: NgZone) {}
 
   ngOnInit() {
-    this.intervalSubscription = interval(5000).subscribe(() => {
-      this.processNextRequest();
-    });
+    this.setupInterval();
     this.processingTimeChanges.subscribe((time) => {
       this.processingTime = time;
     });
   }
 
+  setupInterval() {
+    this.clearInterval(); // Ensure no intervals are already running
+    this.zone.runOutsideAngular(() => {
+      // Run outside Angular to avoid triggering change detection
+      this.intervalSubscription = interval(5000).subscribe(() => {
+        this.zone.run(() => {
+          // Re-enter Angular zone when state needs to be updated
+          this.processNextRequest();
+        });
+      });
+    });
+  }
+
   ngOnDestroy() {
-    this.intervalSubscription.unsubscribe();
+    this.clearInterval();
   }
 
   submitPrintRequest() {
@@ -106,5 +118,12 @@ export class AppComponent implements OnInit, OnDestroy {
 
   getQueue(): PrintRequest[] {
     return this.queue;
+  }
+
+  clearInterval() {
+    if (this.intervalSubscription) {
+      this.intervalSubscription.unsubscribe();
+      this.intervalSubscription = null;
+    }
   }
 }

@@ -1,6 +1,5 @@
 <p-toast></p-toast>
 
-<!-- Form for submitting print requests -->
 <form (ngSubmit)="submitPrintRequest()" #printForm="ngForm">
   <div class="p-field">
     <label for="userId">User ID:</label>
@@ -41,7 +40,6 @@
   ></p-button>
 </form>
 
-<!-- Section to display the printer queue -->
 <h2>Printer Queue</h2>
 <p-listbox [options]="getPrintQueue()" optionLabel="content">
   <ng-template let-request pTemplate="item">
@@ -52,5 +50,4 @@
   </ng-template>
 </p-listbox>
 
-<!-- Display timer for the next request processing -->
 <h3>Next Request Processing In: {{ processingTime }} seconds</h3>
