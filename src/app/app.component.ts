@@ -81,9 +81,9 @@ export class AppComponent implements OnInit, OnDestroy {
     private cd: ChangeDetectorRef
   ) {
     this.users = [
-      { id: 1, password: 'user1pass', priority: 3 },
-      { id: 2, password: 'user2pass', priority: 2 },
-      { id: 3, password: 'user3pass', priority: 4 },
+      { id: 1, password: '1', priority: 1 },
+      { id: 2, password: '2', priority: 2 },
+      { id: 3, password: '3', priority: 3 },
     ];
   }
 
