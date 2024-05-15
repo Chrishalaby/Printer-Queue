@@ -117,7 +117,7 @@ export class AppComponent implements OnInit, OnDestroy {
         userId: this.userId,
         document: this.content,
         priority: user.priority,
-        timeRemaining: 15,
+        timeRemaining: 20,
       });
 
       this.userId = 0;
