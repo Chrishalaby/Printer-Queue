@@ -1,6 +1,6 @@
 <p-toast></p-toast>
 
-<form (ngSubmit)="submitPrintRequest()" #printForm="ngForm">
+<form (ngSubmit)="submitPrintRequest()" #printForm="ngForm" class="card">
   <div class="p-field">
     <label for="userId">User ID:</label>
     <p-inputNumber
@@ -10,6 +10,16 @@
       [useGrouping]="false"
       [required]="true"
     ></p-inputNumber>
+  </div>
+  <div class="p-field">
+    <label for="password">Password:</label>
+    <p-password
+      [(ngModel)]="password"
+      name="password"
+      inputId="password"
+      [feedback]="false"
+      [required]="true"
+    ></p-password>
   </div>
   <div class="p-field">
     <label for="content">Content:</label>
@@ -23,16 +33,6 @@
       required
     ></textarea>
   </div>
-  <div class="p-field">
-    <label for="priority">Priority:</label>
-    <p-inputNumber
-      [(ngModel)]="priority"
-      name="priority"
-      inputId="priority"
-      [useGrouping]="false"
-      [required]="true"
-    ></p-inputNumber>
-  </div>
   <p-button
     type="submit"
     label="Submit Request"
@@ -40,14 +40,123 @@
   ></p-button>
 </form>
 
-<h2>Printer Queue</h2>
-<p-listbox [options]="getPrintQueue()" optionLabel="content">
-  <ng-template let-request pTemplate="item">
-    <div class="queue-item">
-      User ID: {{ request.userId }}, Priority: {{ request.priority }}, Document:
-      {{ request.document }}
-    </div>
-  </ng-template>
-</p-listbox>
+<div class="card">
+  <h2>Printer Queue</h2>
+  <p-listbox [options]="getPrintQueue()" optionLabel="content">
+    <ng-template let-request pTemplate="item">
+      <div class="queue-item">
+        User ID: {{ request.userId }}, Priority: {{ request.priority }},
+        Document: {{ request.document }}, Time Remaining:
+        {{ request.timeRemaining }}s
+      </div>
+    </ng-template>
+  </p-listbox>
+</div>
 
-<h3>Next Request Processing In: {{ processingTime }} seconds</h3>
+<div class="card">
+  <h3>Currently Processing:</h3>
+  <div *ngIf="currentRequest">
+    <div class="current-request">
+      User ID: {{ currentRequest.userId }}, Priority:
+      {{ currentRequest.priority }}, Document: {{ currentRequest.document }},
+      Time Remaining: {{ currentRequest.timeRemaining }}s
+    </div>
+  </div>
+  <div *ngIf="!currentRequest">No requests are being processed currently.</div>
+</div>
+
+<p-button label="Add User" (click)="showAdminLoginDialog()"></p-button>
+
+<p-dialog
+  header="Admin Login"
+  [(visible)]="displayAdminLoginDialog"
+  [modal]="true"
+  [closable]="false"
+  [draggable]="false"
+>
+  <form (ngSubmit)="verifyAdmin()" #adminLoginForm="ngForm">
+    <div class="p-field">
+      <label for="adminId">Admin ID:</label>
+      <p-inputNumber
+        [(ngModel)]="adminId"
+        name="adminId"
+        inputId="adminId"
+        [useGrouping]="false"
+        [required]="true"
+      ></p-inputNumber>
+    </div>
+    <div class="p-field">
+      <label for="adminPassword">Password:</label>
+      <p-password
+        [(ngModel)]="adminPassword"
+        name="adminPassword"
+        inputId="adminPassword"
+        [feedback]="false"
+        [required]="true"
+      ></p-password>
+    </div>
+    <p-button
+      type="submit"
+      label="Login"
+      [disabled]="!adminLoginForm.valid"
+    ></p-button>
+    <p-button
+      type="button"
+      label="Cancel"
+      (click)="displayAdminLoginDialog = false"
+    ></p-button>
+  </form>
+</p-dialog>
+
+<p-dialog
+  header="Add New User"
+  [(visible)]="displayAddUserDialog"
+  [modal]="true"
+  [closable]="false"
+  [draggable]="false"
+>
+  <form (ngSubmit)="addUser()" #addUserForm="ngForm">
+    <div class="p-field">
+      <label for="newUserId">User ID:</label>
+      <p-inputNumber
+        [(ngModel)]="newUserId"
+        name="newUserId"
+        inputId="newUserId"
+        [useGrouping]="false"
+        [required]="true"
+      ></p-inputNumber>
+    </div>
+    <div class="p-field">
+      <label for="newUserPassword">Password:</label>
+      <p-password
+        [(ngModel)]="newUserPassword"
+        name="newUserPassword"
+        inputId="newUserPassword"
+        [feedback]="false"
+        [required]="true"
+      ></p-password>
+    </div>
+    <div class="p-field">
+      <label for="newUserPriority">Priority:</label>
+      <p-inputNumber
+        [(ngModel)]="newUserPriority"
+        name="newUserPriority"
+        inputId="newUserPriority"
+        [min]="1"
+        [max]="5"
+        [useGrouping]="false"
+        [required]="true"
+      ></p-inputNumber>
+    </div>
+    <p-button
+      type="submit"
+      label="Add User"
+      [disabled]="!addUserForm.valid"
+    ></p-button>
+    <p-button
+      type="button"
+      label="Cancel"
+      (click)="displayAddUserDialog = false"
+    ></p-button>
+  </form>
+</p-dialog>

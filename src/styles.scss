@@ -2,3 +2,35 @@
 @import "../node_modules/primeng/resources/primeng.min.css";
 @import "../node_modules/primeicons/primeicons.css";
 @import "../node_modules/primeng/resources/themes/lara-light-indigo/theme.css";
+
+
+.queue-item {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.current-request {
+  border: 2px solid #4caf50;
+  padding: 10px;
+  background-color: #e8f5e9;
+}
+
+.card{
+  background: #ffffff;
+  border: 1px solid #dfe7ef;
+  padding: 2rem;
+  margin: 0.5rem;
+  box-shadow: 0px 4px 30px rgba(173, 179, 238, 0.54);
+  border-radius: 12px;
+}
+.p-field {
+  margin-bottom: 15px;
+}
+
+.p-field label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #333;
+}
